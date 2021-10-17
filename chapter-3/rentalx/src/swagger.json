@@ -1,0 +1,343 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "RentX Documentation",
+    "description": "This is an API Rent",
+    "version": "1.0.0",
+    "contact": {
+      "email": "fernandomarca@hotmail.com"
+    }
+  },
+  "paths": {
+    "/categories": {
+      "post": {
+        "tags": ["Category"],
+        "summary": "Create a category",
+        "description": "Create a new category",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/categoryRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/category"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Category already exists"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Category"],
+        "summary": "List all categories",
+        "description": "List all categories",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/category"
+                },
+                "example": [
+                  {
+                    "id": "ba11b50f-ef50-448b-aae0-447bd9b8b2bc",
+                    "name": "SUV",
+                    "description": "Utilitário esportivo",
+                    "created_at": "2021-04-29T02:30:17.125Z"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/import": {
+      "post": {
+        "tags": ["Category"],
+        "summary": "Upload a new category",
+        "description": "Upload a new category",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/specifications": {
+      "post": {
+        "tags": ["Specifications"],
+        "summary": "Create a specification",
+        "description": "Create a new specification",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/specificationRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/specification" }
+              }
+            }
+          },
+          "500": {
+            "description": "Specification already exists!"
+          }
+        }
+      }
+    },
+    "/sessions": {
+      "post": {
+        "tags": ["Session"],
+        "summary": "Authentication user",
+        "description": "Authentication user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Success" },
+          "400": { "description": "Ëmail or password incorrect!" }
+        }
+      }
+    },
+    "/cars": {
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Create a new Car",
+        "description": "Create a new Car",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/carRequestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Created" },
+          "400": { "description": "Car already exists!" }
+        }
+      }
+    },
+    "/cars/images/{id}": {
+      "post": {
+        "tags": ["Cars"],
+        "summary": "Upload images",
+        "description": "Upload images",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Car id",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Created" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "carRequestBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "daily_rate": {
+            "type": "number"
+          },
+          "license_plate": {
+            "type": "string"
+          },
+          "fine_amount": {
+            "type": "number"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "category_id": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "name": "Car created Test",
+          "description": "Car created Test",
+          "daily_rate": 100,
+          "license_plate": "AAA-0000",
+          "fine_amount": 80,
+          "brand": "Brand Car test",
+          "category_id": "Category_id test"
+        }
+      },
+      "specificationRequestBody": {
+        "type": "object",
+        "required": ["name", "description"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "name": "Câmbio automático",
+          "description": "Carro com câmbio automático"
+        }
+      },
+      "specification": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "created_at": { "type": "string" }
+        },
+        "example": {
+          "id": "ba11b50f-ef50-448b-aae0-447bd9b8b2bc",
+          "name": "Câmbio automático",
+          "description": "Carro com câmbio automático",
+          "created_at": "2021-04-29T02:30:17.125Z"
+        }
+      },
+      "categoryRequestBody": {
+        "type": "object",
+        "required": ["name", "description"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "name": "Category Name sample",
+          "description": "Category description sample"
+        }
+      },
+      "category": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "created_at": { "type": "string" }
+        },
+        "example": {
+          "id": "ba11b50f-ef50-448b-aae0-447bd9b8b2bc",
+          "name": "SUV",
+          "description": "Utilitário esportivo",
+          "created_at": "2021-04-29T02:30:17.125Z"
+        }
+      }
+    }
+  }
+}
